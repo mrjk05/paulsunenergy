@@ -45,20 +45,18 @@
     button.textContent = "Sending…";
     show("", true);
 
-    fetch(ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({
-        Name: fields.name.value.trim(),
-        Email: fields.email.value.trim(),
-        Phone: fields.phone.value.trim(),
-        Message: fields.message.value.trim(),
-        access_key: ACCESS_KEY,
-        subject: "New message from paulsunenergy.com",
-        from_name: "paulsunenergy.com",
-        replyto: fields.email.value.trim(),
-      }),
-    })
+    // FormData keeps this a "simple" request: no CORS preflight, which Web3Forms rejects.
+    var data = new FormData();
+    data.append("access_key", ACCESS_KEY);
+    data.append("subject", "New message from paulsunenergy.com");
+    data.append("from_name", "paulsunenergy.com");
+    data.append("replyto", fields.email.value.trim());
+    data.append("Name", fields.name.value.trim());
+    data.append("Email", fields.email.value.trim());
+    data.append("Phone", fields.phone.value.trim());
+    data.append("Message", fields.message.value.trim());
+
+    fetch(ENDPOINT, { method: "POST", headers: { Accept: "application/json" }, body: data })
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
       .then(function (res) {
         if (!res.ok || String(res.d.success) !== "true") throw new Error(res.d.message || "failed");
