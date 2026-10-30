@@ -1,7 +1,9 @@
-// Contact form → email via FormSubmit (https://formsubmit.co). Replaces Solo's form backend.
+// Contact form → email via Web3Forms (https://web3forms.com). Replaces Solo's form backend.
+// The access key only allows sending to the inbox it was created for, so it is safe to be public.
 (function () {
   var RECIPIENT = "admin@paulsunenergy.com";
-  var ENDPOINT = "https://formsubmit.co/ajax/" + RECIPIENT;
+  var ACCESS_KEY = "7fcf9b23-6e11-426b-9144-20624cf507b5";
+  var ENDPOINT = "https://api.web3forms.com/submit";
 
   var button = document.getElementById("contact-submit");
   var status = document.getElementById("contact-status");
@@ -51,9 +53,10 @@
         Email: fields.email.value.trim(),
         Phone: fields.phone.value.trim(),
         Message: fields.message.value.trim(),
-        _replyto: fields.email.value.trim(),
-        _subject: "New message from paulsunenergy.com",
-        _template: "table",
+        access_key: ACCESS_KEY,
+        subject: "New message from paulsunenergy.com",
+        from_name: "paulsunenergy.com",
+        replyto: fields.email.value.trim(),
       }),
     })
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
